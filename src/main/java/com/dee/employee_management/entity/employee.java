@@ -1,16 +1,19 @@
 package com.dee.employee_management.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+
+import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +28,9 @@ public class employee {
 
     private String department;
     private String email;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime crtdate;
+
 }
