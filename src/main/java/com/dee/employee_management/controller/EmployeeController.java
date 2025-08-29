@@ -4,6 +4,7 @@ import com.dee.employee_management.dto.EmployeeManagementResponse;
 import com.dee.employee_management.dto.registerEmployeeRequest;
 import com.dee.employee_management.entity.employee;
 import com.dee.employee_management.service.EmployeeServiceInterface;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,19 @@ public class EmployeeController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<EmployeeManagementResponse<employee>> register(@RequestBody registerEmployeeRequest request) {
+    public ResponseEntity<EmployeeManagementResponse<employee>> register(@Valid @RequestBody registerEmployeeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeServiceInterface.saveEmployee(request));
     }
 
     @GetMapping
     public ResponseEntity<EmployeeManagementResponse<List<employee>>> getAll() {
         return ResponseEntity.ok(employeeServiceInterface.getAllEmployees());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeManagementResponse<employee>> getByID(@PathVariable Long id){
+        //EmployeeManagementResponse<employee> response = employeeServiceInterface.getEmployeeById(id);
+        return ResponseEntity.ok(employeeServiceInterface.getEmployeeById(id));
     }
 
     @PutMapping("/{id}")
