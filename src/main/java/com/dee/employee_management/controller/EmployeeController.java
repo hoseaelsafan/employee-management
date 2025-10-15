@@ -1,6 +1,7 @@
 package com.dee.employee_management.controller;
 
 import com.dee.employee_management.dto.EmployeeManagementResponse;
+import com.dee.employee_management.dto.EmployeePayload;
 import com.dee.employee_management.dto.registerEmployeeRequest;
 import com.dee.employee_management.entity.employee;
 import com.dee.employee_management.service.EmployeeServiceInterface;
@@ -22,24 +23,25 @@ public class EmployeeController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<EmployeeManagementResponse<employee>> register(@Valid @RequestBody registerEmployeeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeServiceInterface.saveEmployee(request));
+    public ResponseEntity<EmployeeManagementResponse<?>> register(@Valid @RequestBody registerEmployeeRequest request) {
+        EmployeeManagementResponse<?> response = employeeServiceInterface.saveEmployee(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<EmployeeManagementResponse<List<employee>>> getAll() {
+    public ResponseEntity<EmployeeManagementResponse<List<EmployeePayload>>> getAll() {
         return ResponseEntity.ok(employeeServiceInterface.getAllEmployees());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeManagementResponse<employee>> getByID(@PathVariable Long id){
-        //EmployeeManagementResponse<employee> response = employeeServiceInterface.getEmployeeById(id);
-        return ResponseEntity.ok(employeeServiceInterface.getEmployeeById(id));
+    public ResponseEntity<EmployeeManagementResponse<EmployeePayload>> getByID(@PathVariable Long id){
+        EmployeeManagementResponse<EmployeePayload> response = employeeServiceInterface.getEmployeeById(id);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeManagementResponse<employee>> updateById(@RequestBody registerEmployeeRequest request,@PathVariable Long id){
-        EmployeeManagementResponse<employee> response = employeeServiceInterface.updateEmployee(request, id);
+    public ResponseEntity<EmployeeManagementResponse<EmployeePayload>> updateById(@Valid @RequestBody registerEmployeeRequest request,@PathVariable Long id){
+        EmployeeManagementResponse<EmployeePayload> response = employeeServiceInterface.updateEmployee(request, id);
         return ResponseEntity.ok(response);
     }
 

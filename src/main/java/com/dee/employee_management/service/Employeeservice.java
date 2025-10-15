@@ -1,6 +1,7 @@
 package com.dee.employee_management.service;
 
 import com.dee.employee_management.dto.EmployeeManagementResponse;
+import com.dee.employee_management.dto.EmployeePayload;
 import com.dee.employee_management.dto.registerEmployeeRequest;
 import com.dee.employee_management.entity.employee;
 import com.dee.employee_management.mapper.EmployeeMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 //this class for service implementation(logic)
@@ -25,27 +27,31 @@ public class Employeeservice implements EmployeeServiceInterface{
     }
 
     @Override
-    public EmployeeManagementResponse<employee> saveEmployee(registerEmployeeRequest request) {
-        employee entity = employeeMapper.toEntity(request);
-        employee saved = employeerepository.save(entity);
-        return employeeMapper.toResponse(saved);
+    public EmployeeManagementResponse<EmployeePayload> saveEmployee(registerEmployeeRequest request) {
+        employee entity = employeeMapper.toEntity(request);// maping from dto to entity use mapper
+        employee saved = employeerepository.save(entity); // save mapping to repository
+        EmployeePayload UserData = employeeMapper.toLoadResponse(saved);
+
+        return new EmployeeManagementResponse<>("00","NEW Employee saved successfully",UserData);
     }
 
     @Override
-    public EmployeeManagementResponse<List<employee>> getAllEmployees() {
+    public EmployeeManagementResponse<List<EmployeePayload>> getAllEmployees() {
         List<employee> list = employeerepository.findAll();
-        return employeeMapper.toResponseList(list);
+        List<EmployeePayload> FetchUser = employeeMapper.toListLoadResponse(list);
+        return new EmployeeManagementResponse<>("00","Fetch ALL ON FIRE", FetchUser);
     }
 
     @Override
-    public EmployeeManagementResponse<employee> getEmployeeById(Long id) {
+    public EmployeeManagementResponse<EmployeePayload> getEmployeeById(Long id) {
         Optional<employee> optional = employeerepository.findById(id);
-        return optional.map(employeeMapper::toResponse)
-                .orElseGet(() -> new EmployeeManagementResponse<>("01", "Employee not found", null));
+        EmployeePayload UserData = optional.map(employeeMapper::toLoadResponse).
+                orElseThrow(() -> new NoSuchElementException("Employee with ID " + id + " not found."));
+        return new EmployeeManagementResponse<>("00", "ONE to ONE IS GOOD", UserData);
     }
 
     @Override
-    public EmployeeManagementResponse<employee> updateEmployee(registerEmployeeRequest request, Long id){
+    public EmployeeManagementResponse<EmployeePayload> updateEmployee(registerEmployeeRequest request, Long id){
         Optional<employee> optional = employeerepository.findById(id);
 
         if (optional.isEmpty()) {
@@ -62,9 +68,10 @@ public class Employeeservice implements EmployeeServiceInterface{
 
         // 3. Save the updated employee
         employee updated = employeerepository.save(existing);
+        EmployeePayload UserData = employeeMapper.toLoadResponse(updated);
 
         // 4. Return response
-        return employeeMapper.toResponse(updated);
+        return new EmployeeManagementResponse<>("00","Update success done", UserData);
     }
 
     @Override
