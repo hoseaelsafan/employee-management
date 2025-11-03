@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class registerEmployeeRequest {
-    @NotBlank
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Department is Required")
     private String department;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is Required")
+    @Email(message = "Email format invalid")
     private String email;
 }

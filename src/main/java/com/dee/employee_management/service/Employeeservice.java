@@ -32,14 +32,14 @@ public class Employeeservice implements EmployeeServiceInterface{
         employee saved = employeerepository.save(entity); // save mapping to repository
         EmployeePayload UserData = employeeMapper.toLoadResponse(saved);
 
-        return new EmployeeManagementResponse<>("00","NEW Employee saved successfully",UserData);
+        return new EmployeeManagementResponse<>("00","Succes",UserData);
     }
 
     @Override
     public EmployeeManagementResponse<List<EmployeePayload>> getAllEmployees() {
         List<employee> list = employeerepository.findAll();
         List<EmployeePayload> FetchUser = employeeMapper.toListLoadResponse(list);
-        return new EmployeeManagementResponse<>("00","Fetch ALL ON FIRE", FetchUser);
+        return new EmployeeManagementResponse<>("00","Succes", FetchUser);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Employeeservice implements EmployeeServiceInterface{
         Optional<employee> optional = employeerepository.findById(id);
         EmployeePayload UserData = optional.map(employeeMapper::toLoadResponse).
                 orElseThrow(() -> new NoSuchElementException("Employee with ID " + id + " not found."));
-        return new EmployeeManagementResponse<>("00", "ONE to ONE IS GOOD", UserData);
+        return new EmployeeManagementResponse<>("00", "Succes", UserData);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Employeeservice implements EmployeeServiceInterface{
         EmployeePayload UserData = employeeMapper.toLoadResponse(updated);
 
         // 4. Return response
-        return new EmployeeManagementResponse<>("00","Update success done", UserData);
+        return new EmployeeManagementResponse<>("00","Succes", UserData);
     }
 
     @Override
